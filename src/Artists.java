@@ -1,17 +1,41 @@
 import secret.Secret;
 
 import java.sql.*;
+import java.util.Scanner;
 
 
-public class Artist {
-     Connection connection;
-     private final String databaseName = "laboration3";     //todo: keep global variable or write inline?
+public class Artists {
+    private Connection connection;
+    private final Scanner scanner = new Scanner(System.in);
+    private final String databaseName = "laboration3";     //todo: keep global variable or write inline?
 
     public static void main(String[] args)  {
-        Artist artist = new Artist();
-        artist.start();
+        Artists artists = new Artists();
+        artists.run();
+
     }
 
+    private void run() {
+        start();
+        menu();
+    }
+
+    private void menu() {
+        int selection = 0;
+        do {
+            Menu.printMenuOptions();
+            selection = Menu.handleSelection(scanner, 7);
+            executeSelection(selection);
+        } while (selection != 0);
+    }
+
+    private void executeSelection(int selection) {
+        switch (selection) {
+            case 0 -> System.out.println("Closing the program...");
+            case 1 -> System.out.println("add artist");
+            default -> System.out.println("Invalid selection");
+        }
+    }
 
 
     private void start()  {
@@ -38,10 +62,6 @@ public class Artist {
 
     private void createDatabase() throws SQLException {
         PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + databaseName);
-
-//        PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?");
-//        statement.setString(1, databaseName);
-
         statement.execute();
 
         statement = connection.prepareStatement("USE " + databaseName);
