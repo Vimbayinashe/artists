@@ -21,13 +21,25 @@ public class Artists {
         //menu();
 
         try {
-            List<String> updateName = updateFirstName("Kelly", 3);
-            List<String> updateName1 = updateLastName("Chaka-Chaka", 1);
+
+
             testData();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<String> updateAge(int age, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "UPDATE Artist SET age = ? WHERE artist_id = ?;"
+        );
+        statement.setInt(1, age);
+        statement.setInt(2, id);
+
+        statement.executeUpdate();
+
+        return getByID(id);
     }
 
     private List<String> updateLastName(String lastName, int id) throws SQLException {
@@ -54,6 +66,20 @@ public class Artists {
         return getByID(id);
     }
 
+    private List<String> updateArtist(String firstName, String lastName, int age, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "UPDATE Artist SET first_name = ?, last_name = ?, age = ? WHERE artist_id = ?;"
+        );
+        statement.setString(1, firstName);
+        statement.setString(2, lastName);
+        statement.setInt(3, age);
+        statement.setInt(4, id);
+
+        statement.executeUpdate();
+
+        return getByID(id);
+    }
+
     private List<String> getByID(int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist WHERE artist_id = ?");
         statement.setInt(1, id);
@@ -70,6 +96,11 @@ public class Artists {
 //        List<String> newArtist2 = add("Michelle", "Knowlands", 41);
 //        List<String> newArtist3 = add("Michael", "Smith", 51);
         //printOne(newArtist);
+
+        //updateData
+//        List<String> updateName = updateFirstName("Kelly", 3);
+//        List<String> updateName1 = updateLastName("Chaka-Chaka", 1);
+//        List<String> updateAge = updateAge(56, 1);
 
         //get all artists
         List<List<String>> artists = getArtists();
