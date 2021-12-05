@@ -3,12 +3,10 @@ import secret.Secret;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class Artists {
     private Connection connection;
-    private final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args)  {
         Artists artists = new Artists();
@@ -18,12 +16,8 @@ public class Artists {
 
     public void run() {
         start();
-        //menu();
-
+   
         try {
-            List<List<String>> artistsByAge = getByAge(41);
-            printMany(artistsByAge);
-            //deleteArtist(1);
             testData();
 
         } catch (SQLException e) {
@@ -31,7 +25,19 @@ public class Artists {
         }
     }
 
-    private List<List<String>> getByAge(int age) throws SQLException {
+
+    private List<List<String>> getArtistsByName(String name) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM Artist WHERE first_name = ? OR last_name = ?"
+        );
+        statement.setString(1, name);
+        statement.setString(2, name);
+        ResultSet resultSet = statement.executeQuery();
+
+        return manyArtistsAsList(resultSet);
+    }
+
+    private List<List<String>> getArtistsByAge(int age) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist WHERE age = ?");
         statement.setInt(1, age);
 
@@ -138,6 +144,14 @@ public class Artists {
 //        List<String> updateName1 = updateLastName("Chaka-Chaka", 1);
 //        List<String> updateAge = updateAge(56, 1);
 
+        // getByName OR getByAge
+//        List<List<String>> artistsByAge = getArtistsByAge(41);
+//        printMany(artistsByAge);
+//        List<List<String>> artistsByName = getArtistsByName("Michael");
+//        printMany(artistsByName);
+
+        //deleteArtist(1);
+
         //get all artists
         List<List<String>> artists = getArtists();
         printMany(artists);
@@ -203,24 +217,6 @@ public class Artists {
         }
         return list;
     }
-
-    private void menu() {       //todo: add try-catch here?
-        int selection;
-        do {
-            Menu.printMenuOptions();
-            selection = Menu.handleSelection(scanner, 7);
-            executeSelection(selection);
-        } while (selection != 0);
-    }
-
-    private void executeSelection(int selection) {
-        switch (selection) {
-            case 0 -> System.out.println("Closing the program...");
-            case 1 -> System.out.println("add artist");
-            default -> System.out.println("Invalid selection");
-        }
-    }
-
 
     private void start()  {
         try {
