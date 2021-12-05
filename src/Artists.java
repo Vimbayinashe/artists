@@ -22,29 +22,54 @@ public class Artists {
 
         try {
             List<String> newArtist = add("Yvonne", "Chaka Chaka", 75);
+            List<String> newArtist1 = add("Michael", "Jackson", 56);
+            List<String> newArtist2 = add("Michelle", "Knowlands", 41);
+            List<String> newArtist3 = add("Michael", "Smith", 51);
             printOne(newArtist);
+
+            List<List<String>> artists = getArtists();
+            printMany(artists);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-//    private void printArtistNames(List<String> artists) {
-//        if(artists.isEmpty())
-//            System.out.println("No artists found");
-//        else {
-//            System.out.println("ID  Firstname   Lastname   Age");
-//            artists.forEach(System.out::println);
-//        }
-//    }
+    private List<List<String>> getArtists() throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist");
+        ResultSet resultSet = statement.executeQuery();
+
+        List<List<String>> list = new ArrayList<>();
+
+        while (resultSet.next()) {
+            list.add(List.of(
+                    resultSet.getString("artist_id"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("age")
+            ));
+        }
+
+        return list;
+    }
+
+    private void printMany(List<List<String>> artists) {
+        printHeader();
+        artists.forEach(this::printArtistDetails);
+    }
 
     private void printOne(List<String> artist) {
-        if(artist.isEmpty())
-            System.out.println("No artist found");
-        else {
-            System.out.println("ID  Firstname   Lastname   Age");
-            artist.forEach(detail -> System.out.print(detail + "   "));
-        }
+        printHeader();
+        printArtistDetails(artist);
+    }
+
+    private void printArtistDetails(List<String> artist) {
+        artist.forEach(detail -> System.out.print(detail + "   "));
+        System.out.println();
+    }
+
+    private void printHeader() {
+        System.out.println("ID  Firstname   Lastname   Age");
     }
 
     public Boolean artistNotFound(String firstName, String lastName) throws SQLException {
@@ -58,7 +83,6 @@ public class Artists {
         List<String> artist = findByName(firstName, lastName);
 
         if(!artist.isEmpty()) {
-            //System.out.println(firstName + " " + lastName + " is already in the database");
             return artist;
         }
 
