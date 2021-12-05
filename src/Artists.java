@@ -1,6 +1,8 @@
 import secret.Secret;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -14,12 +16,71 @@ public class Artists {
 
     }
 
-    private void run() {
+    public void run() {
         start();
-        menu();
+        //menu();
+
+        try {
+            List<List<String>> newArtist = add("Yvonne", "Chaka Chaka", 75);
+            printArtistNames(newArtist);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void menu() {
+    private void printArtistNames(List<List<String>> artists) {
+        if(artists.isEmpty())
+            System.out.println("No artists found");
+        else {
+            System.out.println("ID  Firstname   Lastname   Age");
+            artists.forEach(System.out::println);
+        }
+    }
+
+    public List<List<String>> add(String firstName, String lastName, int age) throws SQLException {
+        List<List<String>> artist = findByName(firstName, lastName);
+
+        if(!artist.isEmpty()) {
+            System.out.println(firstName + " " + lastName + " is already in the database");
+            return artist;
+        }
+
+        PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO Artist (first_name, last_name, age) VALUES (?, ?, ?)"
+        );
+        statement.setString(1, firstName);
+        statement.setString(2, lastName);
+        statement.setInt(3, age);
+        statement.executeUpdate();
+
+        return findByName(firstName, lastName);
+
+    }
+
+    private List<List<String>> findByName(String firstName, String lastName) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM Artist WHERE first_name = ? AND last_name = ?"
+        );
+        statement.setString(1, firstName);
+        statement.setString(2, lastName);
+        ResultSet resultSet = statement.executeQuery();
+
+        List<List<String>> list = new ArrayList<>();
+
+        while (resultSet.next()) {
+            list.add(List.of(
+                    resultSet.getString("artist_id"),
+                    resultSet.getString("first_name") + " " + resultSet.getString("last_name"),
+                    resultSet.getString("age")
+            ));
+        }
+
+        return list;
+    }
+
+
+    private void menu() {       //todo: add try-catch here?
         int selection;
         do {
             Menu.printMenuOptions();
@@ -50,10 +111,11 @@ public class Artists {
     private void createArtistTable() throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS Artist (" +
-                "id int PRIMARY KEY AUTO_INCREMENT," +
+                "artist_id int PRIMARY KEY AUTO_INCREMENT," +
                 "first_name varchar(50) NOT NULL," +
                 "last_name varchar(50) NOT NULL," +
-                "age smallint NOT NULL" +
+                "age smallint NOT NULL," +
+                "CONSTRAINT UniqueArtist UNIQUE (first_name, last_name)" +
                 ")"
         );
         statement.execute();
