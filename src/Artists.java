@@ -21,18 +21,59 @@ public class Artists {
         //menu();
 
         try {
-            List<String> newArtist = add("Yvonne", "Chaka Chaka", 75);
-            List<String> newArtist1 = add("Michael", "Jackson", 56);
-            List<String> newArtist2 = add("Michelle", "Knowlands", 41);
-            List<String> newArtist3 = add("Michael", "Smith", 51);
-            printOne(newArtist);
-
-            List<List<String>> artists = getArtists();
-            printMany(artists);
+            List<String> updateName = updateFirstName("Kelly", 3);
+            List<String> updateName1 = updateLastName("Chaka-Chaka", 1);
+            testData();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<String> updateLastName(String lastName, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "UPDATE Artist SET last_name = ? WHERE artist_id = ?;"
+        );
+        statement.setString(1, lastName);
+        statement.setInt(2, id);
+
+        statement.executeUpdate();
+
+        return getByID(id);
+    }
+
+    private List<String> updateFirstName(String firstName, int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "UPDATE Artist SET first_name = ? WHERE artist_id = ?;"
+        );
+        statement.setString(1, firstName);
+        statement.setInt(2, id);
+
+        statement.executeUpdate();
+
+        return getByID(id);
+    }
+
+    private List<String> getByID(int id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist WHERE artist_id = ?");
+        statement.setInt(1, id);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        return artistAsList(resultSet);
+    }
+
+    private void testData() throws SQLException {
+        //adding artists
+//        List<String> newArtist = add("Yvonne", "Chaka Chaka", 75);
+//        List<String> newArtist1 = add("Michael", "Jackson", 56);
+//        List<String> newArtist2 = add("Michelle", "Knowlands", 41);
+//        List<String> newArtist3 = add("Michael", "Smith", 51);
+        //printOne(newArtist);
+
+        //get all artists
+        List<List<String>> artists = getArtists();
+        printMany(artists);
     }
 
     private List<List<String>> getArtists() throws SQLException {
@@ -51,25 +92,6 @@ public class Artists {
         }
 
         return list;
-    }
-
-    private void printMany(List<List<String>> artists) {
-        printHeader();
-        artists.forEach(this::printArtistDetails);
-    }
-
-    private void printOne(List<String> artist) {
-        printHeader();
-        printArtistDetails(artist);
-    }
-
-    private void printArtistDetails(List<String> artist) {
-        artist.forEach(detail -> System.out.print(detail + "   "));
-        System.out.println();
-    }
-
-    private void printHeader() {
-        System.out.println("ID  Firstname   Lastname   Age");
     }
 
     public Boolean artistNotFound(String firstName, String lastName) throws SQLException {
@@ -106,6 +128,10 @@ public class Artists {
         statement.setString(2, lastName);
         ResultSet resultSet = statement.executeQuery();
 
+        return artistAsList(resultSet);
+    }
+
+    private List<String> artistAsList(ResultSet resultSet) throws SQLException {
         List<String> list = new ArrayList<>();
 
         while (resultSet.next()) {
@@ -114,10 +140,8 @@ public class Artists {
             list.add(resultSet.getString("last_name"));
             list.add(resultSet.getString("age"));
         }
-
         return list;
     }
-
 
     private void menu() {       //todo: add try-catch here?
         int selection;
@@ -174,5 +198,25 @@ public class Artists {
                     Secret.user,
                     Secret.password
             );
+    }
+
+
+    private void printMany(List<List<String>> artists) {
+        printHeader();
+        artists.forEach(this::printArtistDetails);
+    }
+
+    private void printOne(List<String> artist) {
+        printHeader();
+        printArtistDetails(artist);
+    }
+
+    private void printArtistDetails(List<String> artist) {
+        artist.forEach(detail -> System.out.print(detail + "   "));
+        System.out.println();
+    }
+
+    private void printHeader() {
+        System.out.println("ID  Firstname   Lastname   Age");
     }
 }
