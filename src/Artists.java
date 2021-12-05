@@ -43,7 +43,7 @@ public class Artists {
             System.out.println("No artist found");
         else {
             System.out.println("ID  Firstname   Lastname   Age");
-            artist.forEach(detail -> System.out.print(detail + "  "));
+            artist.forEach(detail -> System.out.print(detail + "   "));
         }
     }
 
@@ -52,7 +52,7 @@ public class Artists {
         return artist.isEmpty();
     }
 
-    
+
     //todo: check if artistNotFound BEFORE attempting add()
     public List<String> add(String firstName, String lastName, int age) throws SQLException {
         List<String> artist = findByName(firstName, lastName);
