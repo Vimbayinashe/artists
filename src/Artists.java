@@ -21,28 +21,44 @@ public class Artists {
         //menu();
 
         try {
-            List<List<String>> newArtist = add("Yvonne", "Chaka Chaka", 75);
-            printArtistNames(newArtist);
+            List<String> newArtist = add("Yvonne", "Chaka Chaka", 75);
+            printOne(newArtist);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void printArtistNames(List<List<String>> artists) {
-        if(artists.isEmpty())
-            System.out.println("No artists found");
+//    private void printArtistNames(List<String> artists) {
+//        if(artists.isEmpty())
+//            System.out.println("No artists found");
+//        else {
+//            System.out.println("ID  Firstname   Lastname   Age");
+//            artists.forEach(System.out::println);
+//        }
+//    }
+
+    private void printOne(List<String> artist) {
+        if(artist.isEmpty())
+            System.out.println("No artist found");
         else {
             System.out.println("ID  Firstname   Lastname   Age");
-            artists.forEach(System.out::println);
+            artist.forEach(detail -> System.out.print(detail + "  "));
         }
     }
 
-    public List<List<String>> add(String firstName, String lastName, int age) throws SQLException {
-        List<List<String>> artist = findByName(firstName, lastName);
+    public Boolean artistNotFound(String firstName, String lastName) throws SQLException {
+        List<String> artist = findByName(firstName, lastName);
+        return artist.isEmpty();
+    }
+
+    
+    //todo: check if artistNotFound BEFORE attempting add()
+    public List<String> add(String firstName, String lastName, int age) throws SQLException {
+        List<String> artist = findByName(firstName, lastName);
 
         if(!artist.isEmpty()) {
-            System.out.println(firstName + " " + lastName + " is already in the database");
+            //System.out.println(firstName + " " + lastName + " is already in the database");
             return artist;
         }
 
@@ -58,7 +74,7 @@ public class Artists {
 
     }
 
-    private List<List<String>> findByName(String firstName, String lastName) throws SQLException {
+    private List<String> findByName(String firstName, String lastName) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT * FROM Artist WHERE first_name = ? AND last_name = ?"
         );
@@ -66,14 +82,13 @@ public class Artists {
         statement.setString(2, lastName);
         ResultSet resultSet = statement.executeQuery();
 
-        List<List<String>> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         while (resultSet.next()) {
-            list.add(List.of(
-                    resultSet.getString("artist_id"),
-                    resultSet.getString("first_name") + " " + resultSet.getString("last_name"),
-                    resultSet.getString("age")
-            ));
+            list.add(resultSet.getString("artist_id"));
+            list.add(resultSet.getString("first_name"));
+            list.add(resultSet.getString("last_name"));
+            list.add(resultSet.getString("age"));
         }
 
         return list;
