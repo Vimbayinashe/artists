@@ -21,13 +21,49 @@ public class Artists {
         //menu();
 
         try {
-
-
+            List<List<String>> artistsByAge = getByAge(41);
+            printMany(artistsByAge);
+            //deleteArtist(1);
             testData();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<List<String>> getByAge(int age) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist WHERE age = ?");
+        statement.setInt(1, age);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        return manyArtistsAsList(resultSet);
+    }
+
+    private List<List<String>> manyArtistsAsList(ResultSet resultSet) throws SQLException {
+        List<List<String>> list = new ArrayList<>();
+
+        while (resultSet.next()) {
+            list.add(List.of(
+                    resultSet.getString("artist_id"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("age")
+            ));
+        }
+
+        return list;
+    }
+
+    private void deleteArtist(int id) throws SQLException {
+        if(!artistExists(id))
+            return;
+
+        PreparedStatement statement = connection.prepareStatement(
+                "DELETE FROM Artist WHERE artist_id = ?;"
+        );
+        statement.setInt(1, id);
+        statement.executeUpdate();
     }
 
     private List<String> updateAge(int age, int id) throws SQLException {
@@ -111,29 +147,23 @@ public class Artists {
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist");
         ResultSet resultSet = statement.executeQuery();
 
-        List<List<String>> list = new ArrayList<>();
-
-        while (resultSet.next()) {
-            list.add(List.of(
-                    resultSet.getString("artist_id"),
-                    resultSet.getString("first_name"),
-                    resultSet.getString("last_name"),
-                    resultSet.getString("age")
-            ));
-        }
-
-        return list;
+        return manyArtistsAsList(resultSet);
     }
 
-    public Boolean artistNotFound(String firstName, String lastName) throws SQLException {
-        List<String> artist = findByName(firstName, lastName);
-        return artist.isEmpty();
+    public Boolean artistExists(int id) throws SQLException {
+        List<String> artist = getByID(id);
+        return !artist.isEmpty();
+    }
+
+    public Boolean artistExists(String firstName, String lastName) throws SQLException {
+        List<String> artist = getByName(firstName, lastName);
+        return !artist.isEmpty();
     }
 
 
     //todo: check if artistNotFound BEFORE attempting add()
     public List<String> add(String firstName, String lastName, int age) throws SQLException {
-        List<String> artist = findByName(firstName, lastName);
+        List<String> artist = getByName(firstName, lastName);
 
         if(!artist.isEmpty()) {
             return artist;
@@ -147,11 +177,11 @@ public class Artists {
         statement.setInt(3, age);
         statement.executeUpdate();
 
-        return findByName(firstName, lastName);
+        return getByName(firstName, lastName);
 
     }
 
-    private List<String> findByName(String firstName, String lastName) throws SQLException {
+    private List<String> getByName(String firstName, String lastName) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT * FROM Artist WHERE first_name = ? AND last_name = ?"
         );
