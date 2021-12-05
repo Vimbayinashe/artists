@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Artists {
     private Connection connection;
     private final Scanner scanner = new Scanner(System.in);
-    private final String databaseName = "laboration3";     //todo: keep global variable or write inline?
 
     public static void main(String[] args)  {
         Artists artists = new Artists();
@@ -21,7 +20,7 @@ public class Artists {
     }
 
     private void menu() {
-        int selection = 0;
+        int selection;
         do {
             Menu.printMenuOptions();
             selection = Menu.handleSelection(scanner, 7);
@@ -61,10 +60,10 @@ public class Artists {
     }
 
     private void createDatabase() throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + databaseName);
+        PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS laboration3");
         statement.execute();
 
-        statement = connection.prepareStatement("USE " + databaseName);
+        statement = connection.prepareStatement("USE laboration3");
         statement.execute();
     }
 

@@ -6,6 +6,7 @@ public class Menu {
     public static void printMenuOptions() {
         System.out.println(
                 """
+                
                 Please select a number:
                 1. Add an artist
                 2. Delete an artist
