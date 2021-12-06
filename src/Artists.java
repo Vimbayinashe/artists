@@ -8,6 +8,19 @@ import java.util.List;
 public class Artists {
     private Connection connection;
 
+    public Artists() {
+        try{
+            connection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/",
+                    Secret.user,
+                    Secret.password
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //begin
     public static void main(String[] args)  {
         Artists artists = new Artists();
         artists.run();
@@ -23,7 +36,7 @@ public class Artists {
             e.printStackTrace();
         }
     }
-
+    //end
 
     public List<List<String>> getArtistsByName(String name) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
@@ -190,7 +203,6 @@ public class Artists {
 
     public void start()  {
         try {
-            databaseConnection();
             createDatabase();
             createArtistTable();
         } catch (SQLException e) {
@@ -218,15 +230,6 @@ public class Artists {
         statement = connection.prepareStatement("USE laboration3");
         statement.execute();
     }
-
-    private  void databaseConnection() throws SQLException {
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/",
-                    Secret.user,
-                    Secret.password
-            );
-    }
-
 
     public void printMany(List<List<String>> artists) {
         printHeader();
