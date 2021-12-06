@@ -236,11 +236,6 @@ public class Artists {
         artists.forEach(this::printArtistDetails);
     }
 
-    public void printOne(List<String> artist) {
-        printHeader();
-        printArtistDetails(artist);
-    }
-
     public void printArtistDetails(List<String> artist) {
         artist.forEach(detail -> System.out.print(detail + "   "));
         System.out.println();
