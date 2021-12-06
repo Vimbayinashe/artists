@@ -1,5 +1,4 @@
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -36,11 +35,56 @@ public class Menu {
                 case 0 -> shutDown();
                 case 1 -> addArtist(artists);
                 case 4 -> showAllArtists(artists);
+                case 5 -> findArtistByID(artists);
                 default -> System.out.println("Invalid selection");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void findArtistByID(Artists artists) throws SQLException {
+        int id = getArtistIdFromUser(artists);
+
+        if(id == 0) {
+            cancel();
+            return;
+        }
+
+        List<String> artist = artists.getByID(id);
+
+        System.out.println("Artist ID number was found.");
+        printOne(artist);
+    }
+
+    private void cancel() {
+        System.out.println("cancelling...");
+    }
+
+    private int getArtistIdFromUser(Artists artists) throws SQLException {
+        String userInput;
+        while(true) {
+            System.out.println("Please enter an Artist's ID or 'x' to cancel:");
+            userInput = scanner.nextLine().trim();
+            
+            if(isCancelled(userInput)) {
+                userInput = "0";
+                break;
+            }
+            
+            if(Guard.Against.InvalidInt(userInput) || Integer.parseInt(userInput) < 1) {
+                System.out.println("Please enter a valid Artist ID number.");
+                continue;
+            }
+            
+            if(!artists.artistExists(Integer.parseInt(userInput))) {
+                System.out.println("Artist ID could not be found.");
+                continue;
+            }
+            
+            break;
+        }
+        return Integer.parseInt(userInput);
     }
 
     private void shutDown() {
@@ -117,6 +161,10 @@ public class Menu {
 
     private boolean isCancelled(String[] userInput) {
         return userInput.length == 1 && userInput[0].equalsIgnoreCase("x");
+    }
+
+    private boolean isCancelled(String userInput) {
+        return userInput.equalsIgnoreCase("x");
     }
 
     public static void printMenuOptions() {
