@@ -36,11 +36,48 @@ public class Menu {
                 case 1 -> addArtist(artists);
                 case 4 -> showAllArtists(artists);
                 case 5 -> findArtistByID(artists);
+                case 7 -> findArtistsByName(artists);
                 default -> System.out.println("Invalid selection");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void findArtistsByName(Artists artists) throws SQLException {
+        String name = getName();
+
+        if(isCancelled(name)) {
+            cancel();
+            return;
+        }
+
+        List<List<String>> selectedArtists = artists.getArtistsByName(name);
+
+        if(selectedArtists.isEmpty()) {
+            System.out.println(name + " not found.");
+            return;
+        }
+
+        printMany(selectedArtists);
+    }
+
+    private String getName() {
+        String userInput;
+        while (true) {
+            System.out.println("Enter the name to search for or 'x' to cancel:");
+            userInput = scanner.nextLine().trim();
+
+            if(isCancelled(userInput))
+                break;
+
+            if(userInput.equals(""))
+                continue;
+
+            break;
+        }
+
+        return userInput;
     }
 
     private void findArtistByID(Artists artists) throws SQLException {
@@ -127,9 +164,9 @@ public class Menu {
                     "Please enter new artist's firstname, lastname & age (separated by a comma) or 'x' to cancel:");
             userInput = pattern.split(scanner.nextLine());
 
-            if(isCancelled(userInput)) {
+            if(isCancelled(userInput))
                 break;
-            }
+
 
             if(userInput.length < 3) {
                 System.out.println("All the details stated below are required for a new artist.");
@@ -189,8 +226,8 @@ public class Menu {
         while (true) {
             try {
                 selection = Integer.parseInt(scanner.nextLine());
-            } catch (InputMismatchException e) {
-                System.out.println("Please enter a number corresponding to the menu.");
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number corresponding to the menu.");
                 continue;
             }
 
