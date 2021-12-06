@@ -3,6 +3,36 @@ import java.util.Scanner;
 
 public class Menu {
 
+    private final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        Menu menu = new Menu();
+        menu.run();
+    }
+
+    private void run() {
+        Artists artists = new Artists();
+        artists.start();
+        menu();
+    }
+
+    private void menu() {       //todo: add try-catch here?
+        int selection;
+        do {
+            Menu.printMenuOptions();
+            selection = Menu.handleSelection(scanner, 7);
+            executeSelection(selection);
+        } while (selection != 0);
+    }
+
+    private void executeSelection(int selection) {
+        switch (selection) {
+            case 0 -> System.out.println("Closing the program...");
+            case 1 -> System.out.println("add artist");
+            default -> System.out.println("Invalid selection");
+        }
+    }
+
     public static void printMenuOptions() {
         System.out.println(
                 """
