@@ -65,6 +65,11 @@ public class Menu {
         String lastName = userInput[1].trim();
         int age = Integer.parseInt(userInput[2].trim());
 
+        if(artists.artistExists(firstName, lastName)) {
+            System.out.println(firstName + " " + lastName + " is already saved.");
+            return;
+        }
+
         List<String> newArtist = artists.addArtist(firstName, lastName, age);
 
         System.out.println("New artist added:");
@@ -100,7 +105,7 @@ public class Menu {
                 System.out.println("An artist requires a valid age.");
                 continue;
             }
-            if(Integer.parseInt(userInput[2]) < 16) {
+            if(Integer.parseInt(userInput[2].trim()) < 16) {
                 System.out.println("An artist should be at least 16 years old.");
                 continue;
             }
