@@ -36,12 +36,54 @@ public class Menu {
                 case 1 -> addArtist(artists);
                 case 4 -> showAllArtists(artists);
                 case 5 -> findArtistByID(artists);
+                case 6 -> findArtistsByAge(artists);
                 case 7 -> findArtistsByName(artists);
                 default -> System.out.println("Invalid selection");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void findArtistsByAge(Artists artists) throws SQLException {
+        int age = getAgeFromUser();
+
+        if(age == 0) {
+            cancel();
+            return;
+        }
+
+        List<List<String>> selectedArtists = artists.getArtistsByAge(age);
+
+        if(selectedArtists.isEmpty()) {
+            System.out.println("No " + age + " year old artists found.");
+            return;
+        }
+
+        System.out.println(age + " year old artists:");
+        printMany(selectedArtists);
+    }
+
+    private int getAgeFromUser() {
+        String userInput;
+        while (true) {
+            System.out.println("Enter the age to search for or 'x' to cancel:");
+            userInput = scanner.nextLine().trim();
+
+            if(isCancelled(userInput)) {
+                userInput = "0";
+                break;
+            }
+
+            if(Guard.Against.InvalidInt(userInput) || Integer.parseInt(userInput) < 16) {
+                System.out.println("Please enter a valid age.");
+                continue;
+            }
+
+            break;
+        }
+
+        return Integer.parseInt(userInput);
     }
 
     private void findArtistsByName(Artists artists) throws SQLException {
@@ -59,6 +101,7 @@ public class Menu {
             return;
         }
 
+        System.out.println("Artists with the name '" + name + "' :");
         printMany(selectedArtists);
     }
 
