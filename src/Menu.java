@@ -34,6 +34,7 @@ public class Menu {
             switch (selection) {
                 case 0 -> shutDown();
                 case 1 -> addArtist(artists);
+                case 2 -> deleteArtist(artists);
                 case 4 -> showAllArtists(artists);
                 case 5 -> findArtistByID(artists);
                 case 6 -> findArtistsByAge(artists);
@@ -43,6 +44,42 @@ public class Menu {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteArtist(Artists artists) throws SQLException {
+        int id = getArtistIdFromUser(artists);
+        List<String> artist = artists.getByID(id);
+
+        boolean deleteArtist = confirmDelete(artist.get(1), artist.get(2));
+
+        if(deleteArtist) {
+            artists.deleteArtist(id);
+            System.out.println("Artist successfully deleted.");
+        } else {
+            System.out.println("Artist not deleted.");
+        }
+
+    }
+
+    private boolean confirmDelete(String firstName, String lastName) {
+        boolean delete;
+        String userInput;
+
+        while (true){
+            System.out.println("Do you want to delete " + firstName + " " + lastName + "?");
+            System.out.println("Enter Y for yes or N for no:");
+            userInput = scanner.nextLine().trim();
+
+            if(userInput.equalsIgnoreCase("y") ) {
+                delete = true;
+                break;
+            }
+            if(userInput.equalsIgnoreCase("n")) {
+                delete = false;
+                break;
+            }
+        }
+        return delete;
     }
 
     private void findArtistsByAge(Artists artists) throws SQLException {
