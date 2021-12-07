@@ -59,52 +59,42 @@ public class Artists {
         if(!artistExists(id))
             return;
 
-        PreparedStatement statement = connection.prepareStatement(
-                "DELETE FROM Artist WHERE artist_id = ?;"
-        );
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM Artist WHERE artist_id = ?");
         statement.setInt(1, id);
         statement.executeUpdate();
     }
 
     public void updateAge(int age, int id) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(
-                "UPDATE Artist SET age = ? WHERE artist_id = ?;"
-        );
+        PreparedStatement statement = connection.prepareStatement("UPDATE Artist SET age = ? WHERE artist_id = ?");
         statement.setInt(1, age);
         statement.setInt(2, id);
-
         statement.executeUpdate();
     }
 
     public void updateLastName(String lastName, int id) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement(
-                "UPDATE Artist SET last_name = ? WHERE artist_id = ?;"
-        );
+        PreparedStatement statement = connection.prepareStatement("UPDATE Artist SET last_name = ? WHERE artist_id = ?");
         statement.setString(1, lastName);
         statement.setInt(2, id);
-
         statement.executeUpdate();
     }
 
     public void updateFirstName(String firstName, int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
-                "UPDATE Artist SET first_name = ? WHERE artist_id = ?;"
+                "UPDATE Artist SET first_name = ? WHERE artist_id = ?"
         );
         statement.setString(1, firstName);
         statement.setInt(2, id);
-
         statement.executeUpdate();
     }
 
     public void updateArtist(int id, String firstName, String lastName, int age) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
-                "UPDATE Artist SET first_name = ?, last_name = ?, age = ? WHERE artist_id = ?;"
+                "UPDATE Artist SET first_name = ?, last_name = ?, age = ? WHERE artist_id = ?"
         );
         statement.setString(1, firstName);
         statement.setString(2, lastName);
         statement.setInt(3, age);
         statement.setInt(4, id);
-
         statement.executeUpdate();
     }
 
@@ -172,6 +162,7 @@ public class Artists {
             list.add(resultSet.getString("last_name"));
             list.add(resultSet.getString("age"));
         }
+
         return list;
     }
 
@@ -182,19 +173,6 @@ public class Artists {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public void addTestData() throws SQLException {
-        addArtist("Miriam", "Makeba", 76);
-        addArtist("Stevie", "Wonder", 71);
-        addArtist("Alicia", "Keys", 40);
-        addArtist("Gemma", "Griffiths", 34);
-        addArtist("Jah", "Prayzah", 41);
-        addArtist("Mary J", "Blige", 50);
-        addArtist("Michelle", "Williams", 42);
-        addArtist("Kelly", "Rowlands", 40);
-        addArtist("Shingisai", "Suluma", 56);
-        addArtist("Fungisai", "Zvakavepano", 46);
     }
 
     private void createArtistTable() throws SQLException {
@@ -216,6 +194,19 @@ public class Artists {
 
         statement = connection.prepareStatement("USE laboration3");
         statement.execute();
+    }
+
+    public void addTestData() throws SQLException {
+        addArtist("Miriam", "Makeba", 76);
+        addArtist("Stevie", "Wonder", 71);
+        addArtist("Alicia", "Keys", 40);
+        addArtist("Gemma", "Griffiths", 34);
+        addArtist("Jah", "Prayzah", 41);
+        addArtist("Mary J", "Blige", 50);
+        addArtist("Michelle", "Williams", 42);
+        addArtist("Kelly", "Rowlands", 40);
+        addArtist("Shingisai", "Suluma", 56);
+        addArtist("Fungisai", "Zvakavepano", 46);
     }
 
 }
