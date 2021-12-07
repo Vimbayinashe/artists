@@ -238,7 +238,7 @@ public class Menu {
             return;
         }
 
-        System.out.println("Artists with the name '" + name + "' :");
+        System.out.println("Artists found:");
         printMany(selectedArtists);
     }
 

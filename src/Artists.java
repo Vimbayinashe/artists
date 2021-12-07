@@ -22,10 +22,10 @@ public class Artists {
 
     public List<List<String>> getArtistsByName(String name) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
-                "SELECT * FROM Artist WHERE first_name = ? OR last_name = ?"
+                "SELECT * FROM Artist WHERE first_name LIKE ? OR last_name LIKE ?"
         );
-        statement.setString(1, name);
-        statement.setString(2, name);
+        statement.setString(1, name + "%");
+        statement.setString(2, name + "%");
         ResultSet resultSet = statement.executeQuery();
 
         return manyArtistsAsList(resultSet);
