@@ -34,7 +34,6 @@ public class Artists {
     public List<List<String>> getArtistsByAge(int age) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM Artist WHERE age = ?");
         statement.setInt(1, age);
-
         ResultSet resultSet = statement.executeQuery();
 
         return manyArtistsAsList(resultSet);

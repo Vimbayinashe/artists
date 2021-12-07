@@ -140,7 +140,6 @@ public class Menu {
                 System.out.println("Minimum age allowed is 16 years. Please try again.");
                 continue;
             }
-
             break;
         }
         return userInput;
@@ -158,7 +157,6 @@ public class Menu {
         } else {
             System.out.println("Artist not deleted.");
         }
-
     }
 
     private boolean confirmDelete(String firstName, String lastName) {
@@ -216,10 +214,8 @@ public class Menu {
                 System.out.println("Please enter a valid age.");
                 continue;
             }
-
             break;
         }
-
         return Integer.parseInt(userInput);
     }
 
@@ -256,7 +252,6 @@ public class Menu {
 
             break;
         }
-
         return userInput;
     }
 
@@ -298,7 +293,6 @@ public class Menu {
                 System.out.println("Artist ID could not be found.");
                 continue;
             }
-            
             break;
         }
         return Integer.parseInt(userInput);
@@ -370,7 +364,6 @@ public class Menu {
                 System.out.println("An artist should be at least 16 years old.");
                 continue;
             }
-
             break;
         }
         return userInput;
