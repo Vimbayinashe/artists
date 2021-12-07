@@ -20,24 +20,6 @@ public class Artists {
         }
     }
 
-    //begin
-    public static void main(String[] args)  {
-        Artists artists = new Artists();
-        artists.run();
-
-    }
-
-    public void run() {
-        start();
-
-        try {
-            printMany(getArtists());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    //end
-
     public List<List<String>> getArtistsByName(String name) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "SELECT * FROM Artist WHERE first_name = ? OR last_name = ?"
@@ -114,7 +96,7 @@ public class Artists {
         statement.executeUpdate();
     }
 
-    public List<String> updateArtist(int id, String firstName, String lastName, int age) throws SQLException {
+    public void updateArtist(int id, String firstName, String lastName, int age) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Artist SET first_name = ?, last_name = ?, age = ? WHERE artist_id = ?;"
         );
@@ -124,8 +106,6 @@ public class Artists {
         statement.setInt(4, id);
 
         statement.executeUpdate();
-
-        return getByID(id);
     }
 
     public List<String> getByID(int id) throws SQLException {
@@ -239,19 +219,4 @@ public class Artists {
         statement.execute();
     }
 
-    //begin
-    public void printMany(List<List<String>> artists) {
-        printHeader();
-        artists.forEach(this::printArtistDetails);
-    }
-
-    public void printArtistDetails(List<String> artist) {
-        artist.forEach(detail -> System.out.print(detail + "   "));
-        System.out.println();
-    }
-
-    public void printHeader() {
-        System.out.println("ID  Firstname   Lastname   Age");
-    }
-    //end
 }
