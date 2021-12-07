@@ -38,11 +38,17 @@ public class Menu {
                 case 5 -> findArtistByID(artists);
                 case 6 -> findArtistsByAge(artists);
                 case 7 -> findArtistsByName(artists);
+                case 8 -> addDefaultArtists(artists);
                 default -> System.out.println("Invalid selection");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addDefaultArtists(Artists artists) throws SQLException {
+        artists.addTestData();
+        System.out.println("Default artists successfully added!");
     }
 
     private void updateArtist(Artists artists) throws SQLException {
@@ -390,6 +396,7 @@ public class Menu {
                 5. Find an artist by ArtistID
                 6. Find artists by age
                 7. Find artists by name
+                8. Add default artists
                 0. Exit program
                 """
         );

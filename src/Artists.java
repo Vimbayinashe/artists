@@ -179,13 +179,12 @@ public class Artists {
         try {
             createDatabase();
             createArtistTable();
-            addTestData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void addTestData() throws SQLException {
+    public void addTestData() throws SQLException {
         addArtist("Miriam", "Makeba", 76);
         addArtist("Stevie", "Wonder", 71);
         addArtist("Alicia", "Keys", 40);
