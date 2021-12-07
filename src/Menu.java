@@ -1,7 +1,5 @@
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Menu {
@@ -35,6 +33,7 @@ public class Menu {
                 case 0 -> shutDown();
                 case 1 -> addArtist(artists);
                 case 2 -> deleteArtist(artists);
+                case 3 -> updateArtist(artists);
                 case 4 -> showAllArtists(artists);
                 case 5 -> findArtistByID(artists);
                 case 6 -> findArtistsByAge(artists);
@@ -44,6 +43,101 @@ public class Menu {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateArtist(Artists artists) throws SQLException {
+        int id = getArtistIdFromUser(artists);
+
+        if (id == 0) {
+            cancel();
+            return;
+        }
+
+        List<String> artist = artists.getByID(id);
+        Map<String, String> newDetails = getUpdateDetails(artist);
+
+        if(newDetails.isEmpty()) {
+            cancel();
+            return;
+        }
+
+        if(newDetails.containsKey("firstName"))
+            artists.updateFirstName(newDetails.get("firstName"), id);
+
+        if(newDetails.containsKey("lastName"))
+            artists.updateLastName(newDetails.get("lastName"), id);
+
+        if(newDetails.containsKey("age"))
+            artists.updateAge(Integer.parseInt(newDetails.get("age")), id);
+
+        List<String> updatedArtist = artists.getByID(id);
+
+        System.out.println("The artist's updated details:");
+        printOne(updatedArtist);
+    }
+
+    private Map<String, String> getUpdateDetails(List<String> artist) {
+        Map<String, String> updateDetails = new HashMap<>();
+
+        System.out.println("You are updating " + artist.get(1) + " " + artist.get(2) + " (" + artist.get(3) +" years).");
+        System.out.println("Leave a blank line to skip or 'x' to cancel this update.");
+
+        System.out.println("Enter a new firstname:");
+        String firstName = scanner.nextLine().trim();
+
+        if (isCancelled(firstName)) {
+            return Map.of();
+        } else if (!firstName.isEmpty()) {
+            updateDetails.put("firstName", firstName);
+        }
+
+        System.out.println("Enter a new lastname:");
+        String lastName = scanner.nextLine().trim();
+
+        if (isCancelled(lastName)) {
+            return Map.of();
+        } else if (!lastName.isEmpty()) {
+            updateDetails.put("lastName", lastName);
+        }
+
+        System.out.println("Enter a new age:");
+        String age = getAgeUpdate();
+
+        if (isCancelled(age)) {
+            return Map.of();
+        } else if (!age.isEmpty()) {
+            updateDetails.put("age", age);
+        }
+
+        return updateDetails;
+    }
+
+    private String getAgeUpdate() {
+        String userInput;
+
+        while(true) {
+            userInput = scanner.nextLine().trim();
+
+            if (isCancelled(userInput)) {
+                userInput = "x";
+                break;
+            }
+
+            if(userInput.isEmpty())
+                break;
+
+            if (Guard.Against.InvalidInt(userInput)) {
+                System.out.println("Please enter a valid age.");
+                continue;
+            }
+            if (Integer.parseInt(userInput) < 16) {
+                System.out.println("Minimum age allowed is 16 years. Please try again.");
+                continue;
+            }
+
+            break;
+        }
+        return userInput;
     }
 
     private void deleteArtist(Artists artists) throws SQLException {
@@ -302,7 +396,7 @@ public class Menu {
     }
 
     public static int handleSelection (Scanner scanner, int count) {
-        int selection = 0;
+        int selection;
         while (true) {
             try {
                 selection = Integer.parseInt(scanner.nextLine());

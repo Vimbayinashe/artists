@@ -84,7 +84,7 @@ public class Artists {
         statement.executeUpdate();
     }
 
-    public List<String> updateAge(int age, int id) throws SQLException {
+    public void updateAge(int age, int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Artist SET age = ? WHERE artist_id = ?;"
         );
@@ -92,11 +92,9 @@ public class Artists {
         statement.setInt(2, id);
 
         statement.executeUpdate();
-
-        return getByID(id);
     }
 
-    public List<String> updateLastName(String lastName, int id) throws SQLException {
+    public void updateLastName(String lastName, int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Artist SET last_name = ? WHERE artist_id = ?;"
         );
@@ -104,11 +102,9 @@ public class Artists {
         statement.setInt(2, id);
 
         statement.executeUpdate();
-
-        return getByID(id);
     }
 
-    public List<String> updateFirstName(String firstName, int id) throws SQLException {
+    public void updateFirstName(String firstName, int id) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Artist SET first_name = ? WHERE artist_id = ?;"
         );
@@ -116,11 +112,9 @@ public class Artists {
         statement.setInt(2, id);
 
         statement.executeUpdate();
-
-        return getByID(id);
     }
 
-    public List<String> updateArtist(String firstName, String lastName, int age, int id) throws SQLException {
+    public List<String> updateArtist(int id, String firstName, String lastName, int age) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE Artist SET first_name = ?, last_name = ?, age = ? WHERE artist_id = ?;"
         );
