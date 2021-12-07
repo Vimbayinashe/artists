@@ -199,9 +199,23 @@ public class Artists {
         try {
             createDatabase();
             createArtistTable();
+            addTestData();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addTestData() throws SQLException {
+        addArtist("Miriam", "Makeba", 76);
+        addArtist("Stevie", "Wonder", 71);
+        addArtist("Alicia", "Keys", 40);
+        addArtist("Gemma", "Griffiths", 34);
+        addArtist("Jah", "Prayzah", 41);
+        addArtist("Mary J", "Blige", 50);
+        addArtist("Michelle", "Williams", 42);
+        addArtist("Kelly", "Rowlands", 40);
+        addArtist("Shingisai", "Suluma", 56);
+        addArtist("Fungisai", "Zvakavepano", 46);
     }
 
     private void createArtistTable() throws SQLException {
@@ -225,6 +239,7 @@ public class Artists {
         statement.execute();
     }
 
+    //begin
     public void printMany(List<List<String>> artists) {
         printHeader();
         artists.forEach(this::printArtistDetails);
@@ -238,4 +253,5 @@ public class Artists {
     public void printHeader() {
         System.out.println("ID  Firstname   Lastname   Age");
     }
+    //end
 }
